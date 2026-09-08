@@ -1,0 +1,13 @@
+# Environments
+.env
+venv/
+env/
+
+# Course Materials (kept locally)
+session_materials/
+downloads_organizer/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
