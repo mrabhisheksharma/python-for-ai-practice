@@ -11,4 +11,4 @@ client = APIClient("sk-12345XYZ")
 print(client.fetch_data())
 
 # Trying to access it directly will crash!
-# print(client.__api_key) # AttributeError
+print(client.__api_key) # AttributeError

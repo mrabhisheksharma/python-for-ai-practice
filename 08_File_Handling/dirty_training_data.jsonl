@@ -1,0 +1,6 @@
+{"prompt": "What is the capital of France?", "completion": "Paris"}
+{"prompt": "Explain gravity.", "completion": "It is a fundamental interaction."}
+{"prompt": "Translate 'Hello' to Spanish."}
+This is not a valid JSON line and should fail to parse.
+{"prompt": "Summarize the text.", "completion": "Ok"}
+{"prompt": "Who wrote Hamlet?", "completion": "William Shakespeare"}

@@ -3,4 +3,4 @@ def calculate_accuracy(correct, total):
         return 0.0
     return (correct / total) * 100
 
-print(f"Accuracy: {calculate_accuracy(85, 100)}%")
+print(f"Accuracy: {calculate_accuracy(70, 100)}%")
