@@ -1,4 +1,22 @@
-Python-01/
-Python-02/
 __pycache__/
 *.pyc
+.agents/
+venv/
+downloads_organizer/
+
+# Ignore everything in session materials by default to protect notes
+session_materials_01/*
+session_materials_02/*
+
+# Un-ignore the presentation folder to push them to students
+!session_materials_01/presentation/
+!session_materials_02/presentation/
+
+# Only un-ignore .ipynb files in the extrafiles folders
+!session_materials_01/extrafiles/
+session_materials_01/extrafiles/*
+!session_materials_01/extrafiles/*.ipynb
+
+!session_materials_02/extrafiles/
+session_materials_02/extrafiles/*
+!session_materials_02/extrafiles/*.ipynb
