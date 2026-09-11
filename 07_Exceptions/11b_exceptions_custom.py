@@ -7,9 +7,4 @@ def make_api_call(usage_count):
         raise RateLimitError("You have exceeded your API quota.")
     return "Success"
 
-try:
-    print(make_api_call(150))
-except RateLimitError as e:
-    print(f"API Failed: {e}")
-except Exception as e:
-    print("A general error occurred.")
+print(make_api_call(150))

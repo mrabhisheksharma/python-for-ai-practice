@@ -7,8 +7,8 @@ class APIClient:
         # The class uses the hidden key internally
         return f"Fetching data using hidden key: ...{self.__api_key[-4:]}"
 
-client = APIClient("sk-12345XYZ")
+client = APIClient("sk-12345XYZ5654777645")
 print(client.fetch_data())
 
 # Trying to access it directly will crash!
-print(client.__api_key) # AttributeError
+#print(client.__api_key) # AttributeError

@@ -19,7 +19,7 @@ def ask_openrouter(prompt: str):
         response = client.chat.completions.create(
             model="meta-llama/llama-3.1-8b-instruct",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": "You are a helpful assistant.You provide summarized short answers."},
                 {"role": "user", "content": prompt}
             ]
         )

@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Foundations for AI</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           LIGHT MODE — warm cream, teal & coral
+           ═══════════════════════════════════════════ */
+        :root {
+            --bg-main: #fdfbf7;
+            --bg-alt: #f3f0e8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #0d9488;
+            --accent-hover: #0f766e;
+            --accent-glow: rgba(13, 148, 136, 0.15);
+            --border: #e2e0d8;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --code-border: #334155;
+            --pill-active-bg: linear-gradient(135deg, #0d9488, #06b6d4);
+            --pill-active-text: #ffffff;
+            --btn-gradient: linear-gradient(135deg, #0d9488, #06b6d4);
+            --output-accent: #f97316;
+            --heading-gradient: linear-gradient(135deg, #0d9488, #0284c7);
+            --navbar-bg: rgba(253, 251, 247, 0.85);
+        }
+
+        /* ═══════════════════════════════════════════
+           DARK MODE — deep navy, violet & electric cyan
+           ═══════════════════════════════════════════ */
+        body.dark-mode {
+            --bg-main: #0b0e17;
+            --bg-alt: #141825;
+            --text-main: #e8ecf4;
+            --text-muted: #8b95b0;
+            --accent: #a78bfa;
+            --accent-hover: #8b5cf6;
+            --accent-glow: rgba(167, 139, 250, 0.12);
+            --border: #252b3b;
+            --code-bg: #0d1117;
+            --code-text: #c9d1d9;
+            --code-border: #2d3548;
+            --pill-active-bg: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            --pill-active-text: #ffffff;
+            --btn-gradient: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            --output-accent: #f59e0b;
+            --heading-gradient: linear-gradient(135deg, #a78bfa, #22d3ee);
+            --navbar-bg: rgba(11, 14, 23, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* ─── Collapsible Top Navbar ─── */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 1.5rem;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            height: 8px;
+            overflow: hidden;
+            transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.35s ease;
+        }
+
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 3px;
+            border-radius: 3px;
+            background: var(--accent);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar:hover,
+        .navbar.expanded {
+            height: 68px;
+            padding: 0 1.5rem;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .navbar:hover::after,
+        .navbar.expanded::after {
+            opacity: 0;
+        }
+
+        .navbar>* {
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.25s ease 0.05s, transform 0.25s ease 0.05s;
+        }
+
+        .navbar:hover>*,
+        .navbar.expanded>* {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .pill-btn {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem 1.1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .pill-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .pill-btn.active {
+            background: var(--pill-active-bg);
+            color: var(--pill-active-text);
+            border-color: transparent;
+            box-shadow: 0 2px 12px var(--accent-glow);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem 0.9rem;
+            font-size: 1rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        /* ─── Main Content ─── */
+        .content-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2rem 3rem 2rem;
+            margin-top: 8px;
+            transition: margin-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Shift content view smoothly below navbar on hover */
+        .navbar:hover~.content-container,
+        .navbar.expanded~.content-container,
+        body:has(.navbar:hover) .content-container,
+        body:has(.navbar.expanded) .content-container {
+            margin-top: 68px;
+        }
+
+        .section-pane {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            /* Added for absolute positioning of child side-graphics */
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        .side-graphic {
+            position: absolute;
+            top: 2rem;
+            width: 280px;
+            display: none;
+            /* Hidden by default on smaller screens */
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-graphic:hover {
+            opacity: 1;
+        }
+
+        @media (min-width: 1420px) {
+            .side-graphic {
+                display: block;
+                animation: fadeSlideIn 0.6s ease;
+            }
+
+            .side-graphic.left {
+                right: 104%;
+            }
+
+            .side-graphic.right {
+                left: 104%;
+            }
+        }
+
+        /* SVG Styling */
+        .side-graphic svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+        }
+
+
+
+        /* ─── Floating Bulb Button ─── */
+        #bulb-btn {
+            position: fixed;
+            left: 20px;
+            top: 60px;
+            background: var(--bg-alt);
+            border: 2px solid var(--accent);
+            color: var(--text-main);
+            border-radius: 25px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--accent-glow);
+            z-index: 100;
+            transition: all 0.3s ease;
+            gap: 8px;
+        }
+
+        #bulb-btn:hover {
+            transform: scale(1.05);
+            background: var(--accent-glow);
+        }
+
+        .bulb-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        #bulb-btn:hover .bulb-text,
+        #bulb-btn.expanded .bulb-text {
+            display: inline-block;
+        }
+
+        @media (min-width: 1440px) {
+            #bulb-btn {
+                left: calc(50% - 720px);
+                top: calc(50% - 210px);
+                /* Just above the image area */
+            }
+        }
+
+        /* ─── Dynamic Side Panels ─── */
+        .side-panel {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
+            z-index: 50;
+        }
+
+        .side-panel.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+            z-index: 200;
+        }
+
+        @media (min-width: 1440px) {
+            .side-panel {
+                display: block;
+                transform: translateY(-50%) scale(0.95);
+            }
+
+            #left-panel {
+                left: calc(50% - 720px);
+            }
+
+            #right-panel {
+                right: calc(50% - 720px);
+            }
+        }
+
+        .side-panel svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+        }
+
+        .section-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── Typography ─── */
+        h1 {
+            font-size: 2.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: var(--heading-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 500;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        p,
+        li {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        li strong {
+            color: var(--text-main);
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ─── Hero Section ─── */
+        .hero-section {
+            text-align: center;
+            padding-top: 4rem;
+        }
+
+        .hero-section img {
+            width: 150px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+        }
+
+        /* ─── OOP Sub-navigation ─── */
+        .sub-nav {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .sub-pill {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.45rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+        }
+
+        .sub-pill:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+        }
+
+        .sub-pill.active {
+            background: var(--pill-active-bg);
+            color: var(--pill-active-text);
+            border-color: transparent;
+        }
+
+        .sub-pane {
+            display: none;
+        }
+
+        .sub-pane.active {
+            display: block;
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        /* ─── Code Blocks ─── */
+        .code-container {
+            position: relative;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--code-border);
+            background: var(--code-bg);
+            overflow: hidden;
+        }
+
+        pre {
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--code-text);
+            line-height: 1.6;
+        }
+
+        .inline-code {
+            background-color: var(--bg-alt);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            border: 1px solid var(--border);
+            color: var(--accent);
+        }
+
+        /* ─── Copy Button ─── */
+        .btn-copy {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        /* ─── Reveal Output Button ─── */
+        .btn-reveal {
+            background: var(--btn-gradient);
+            border: none;
+            color: #fff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 1rem;
+            box-shadow: 0 2px 10px var(--accent-glow);
+        }
+
+        .btn-reveal:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        /* ─── Output Box ─── */
+        .output-box {
+            display: none;
+            background-color: var(--bg-alt);
+            border-left: 3px solid var(--output-accent);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .output-box.show {
+            display: block;
+            animation: fadeSlideIn 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar" id="navbar">
+        <button class="pill-btn active" onclick="openSection('intro', this)">Python Introduction</button>
+        <button class="pill-btn" onclick="openSection('basics', this)">Core Basics</button>
+        <button class="pill-btn" onclick="openSection('control', this)">Control Structures</button>
+        <button class="pill-btn" onclick="openSection('datastruct', this)">Data Structures</button>
+        <button class="pill-btn" onclick="openSection('functions', this)">Functions & Modules</button>
+        <button class="pill-btn" onclick="openSection('oop', this)">OOP Concepts</button>
+        <button class="pill-btn" onclick="openSection('exceptions', this)">Exceptions</button>
+        <button class="pill-btn" onclick="openSection('filehandling', this)">File Handling</button>
+        <button class="pill-btn" onclick="openSection('concurrency', this)">Concurrency</button>
+        <button class="pill-btn" onclick="openSection('api', this)">Calling API</button>
+        <button class="pill-btn" onclick="openSection('summary', this)">So far we learnt</button>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
+    </nav>
+
+
+    <!-- Fixed Side Panels -->
+    <div id="left-panel" class="side-panel"></div>
+    <div id="right-panel" class="side-panel"></div>
+
+    <div class="content-container">
+
+        <!-- 1. Introduction -->
+        <div id="intro" class="section-pane active">
+            <div class="hero-section">
+                <img src="python-logo.svg" alt="Python Logo">
+
+                <h1>Python for AI: Core Foundations</h1>
+                <p>Welcome to the foundational module. Before we dive into GenAI, LLMs, and Agentic workflows, we must
+                    solidify the software engineering habits that bridge the gap between simple scripts and robust,
+                    production-ready code.</p>
+            </div>
+
+            <h2>Why These Topics Matter</h2>
+            <ul>
+                <li><strong>Core Basics & Control Structures</strong> → How Python stores and evaluates basic
+                    information, and controls flow.</li>
+                <li><strong>Data Structures</strong> → The raw material. Every API payload, dataset, and token batch is
+                    built on lists and dictionaries.</li>
+                <li><strong>Functions & Modules</strong> → Writing reusable logic and leveraging Python's library
+                    ecosystem (including comprehensions and lambdas).</li>
+                <li><strong>OOP Concepts</strong> → Every GenAI framework (LangChain, LlamaIndex, Agent SDKs) relies on
+                    classes you'll subclass or compose.</li>
+                <li><strong>Exceptions</strong> → LLM calls fail constantly due to rate limits, timeouts, or malformed
+                    responses. Handling these is mandatory.</li>
+                <li><strong>File Handling</strong> → Reading datasets and persisting data using Text and JSON files.
+                </li>
+                <li><strong>Concurrency</strong> → Speeding up execution via Multithreading (I/O) and Multiprocessing
+                    (CPU).</li>
+                <li><strong>Calling API</strong> → Input → Model call → Parse response. This is the blueprint of every
+                    GenAI application.</li>
+            </ul>
+        </div>
+
+
+        <!-- 1A. Core Basics -->
+        <div id="basics" class="section-pane">
+            <h1>Python Core Basics</h1>
+            <p>Before moving into complex structures, we need to understand how Python stores and evaluates basic
+                information. This is optional if you already know basic programming.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('basics-1', this)">1. Variables & Types</button>
+                <button class="sub-pill" onclick="openSub('basics-2', this)">2. Operators</button>
+            </div>
+
+            <!-- Variables -->
+            <div id="basics-1" class="sub-pane active">
+                <h2>1. Variables & Data Types</h2>
+                <p>Python doesn't need you to declare a type upfront — the variable's type is decided by what you assign
+                    it.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>name = "Model-A"        # str
+accuracy = 91.4         # float
+epochs = 50             # int
+is_trained = True       # bool
+
+print(type(accuracy))
+accuracy_str = str(accuracy)</code></pre>
+                </div>
+            </div>
+
+            <!-- Operators -->
+            <div id="basics-2" class="sub-pane">
+                <h2>2. Operators</h2>
+                <p>Basic math, comparisons, and logic to evaluate state.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>total = 10 + 5
+avg = total / 2
+
+# Initialize variables
+accuracy = 91.4
+is_trained = True
+epochs = 50
+
+# Comparison & Logical
+print(accuracy > 90)
+print(is_trained and accuracy > 90)
+
+# Assignment shorthand
+epochs += 10</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1B. Control Structures -->
+        <div id="control" class="section-pane">
+            <h1>Control Structures</h1>
+            <p>How we control the flow of execution: making decisions and repeating actions.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('control-1', this)">1. if / elif / else</button>
+                <button class="sub-pill" onclick="openSub('control-2', this)">2. for loops</button>
+                <button class="sub-pill" onclick="openSub('control-3', this)">3. while loops</button>
+            </div>
+
+            <!-- IF -->
+            <div id="control-1" class="sub-pane active">
+                <h2>1. if / elif / else</h2>
+                <p>Standard branching — condition checked, one true path taken.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>if accuracy >= 90:
+    print("Excellent model")
+elif accuracy >= 75:
+    print("Good, needs tuning")
+else:
+    print("Needs more work")</code></pre>
+                </div>
+            </div>
+
+            <!-- FOR -->
+            <div id="control-2" class="sub-pane">
+                <h2>2. for loops</h2>
+                <p>"Loop over a collection" is the pattern you'll use constantly once looping over API results.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>scores = [91.4, 85.2, 78.0]
+for score in scores:
+    print(score)
+
+# Using len()
+print(f"Total scores: {len(scores)}")
+for i in range(len(scores)):
+    print(f"Index {i}: {scores[i]}")
+
+# Reverse loop
+for score in reversed(scores):
+    print(score)</code></pre>
+                </div>
+            </div>
+
+            <!-- WHILE -->
+            <div id="control-3" class="sub-pane">
+                <h2>3. while loops</h2>
+                <p>Keep going until a condition is false.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>epochs_left = 3
+while epochs_left > 0:
+    print(f"{epochs_left} epochs left")
+    epochs_left -= 1</code></pre>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 2. Data Structures -->
+        <div id="datastruct" class="section-pane">
+
+            <h1>Data Structures in Python</h1>
+            <p>Python's built-in data structures are how you hold data before you wrap it in a class. Dictionaries
+                specifically mirror every API response and JSON payload you'll work with.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('ds-1', this)">1. Lists</button>
+                <button class="sub-pill" onclick="openSub('ds-2', this)">2. Tuples</button>
+                <button class="sub-pill" onclick="openSub('ds-3', this)">3. Dictionaries</button>
+                <button class="sub-pill" onclick="openSub('ds-4', this)">4. Sets</button>
+            </div>
+
+            <!-- Lists -->
+            <div id="ds-1" class="sub-pane active">
+                <h2>1. Lists</h2>
+                <p>Ordered, mutable, allows duplicates. The default "collection of things" — datasets, batches, results
+                    almost always start as a list.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>scores = [91.4, 85.2, 78.0]
+scores.append(88.9)
+print(scores[0])        # indexing
+print(scores[-1])       # last item
+print(scores[1:3])      # slicing</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-ds1')">Reveal Output</button>
+                <div id="out-ds1" class="output-box">91.4<br>88.9<br>[85.2, 78.0]</div>
+            </div>
+
+            <!-- Tuples -->
+            <div id="ds-2" class="sub-pane">
+                <h2>2. Tuples</h2>
+                <p>Ordered, <strong>immutable</strong> — once created, can't be changed. Use when the data shouldn't
+                    change after creation.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>coordinates = (28.7, 77.1)
+name, accuracy = ("Model-A", 91.4)   # unpacking
+print(name)
+print(accuracy)</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-ds2')">Reveal Output</button>
+                <div id="out-ds2" class="output-box">Model-A<br>91.4</div>
+            </div>
+
+            <!-- Dictionaries -->
+            <div id="ds-3" class="sub-pane">
+                <h2>3. Dictionaries</h2>
+                <p>Key-value pairs — the shape of virtually every API request and response you'll work with.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>model_info = {
+    "name": "Model-A",
+    "accuracy": 91.4,
+    "tags": ["nlp", "v2"]
+}
+print(model_info["name"])
+model_info["accuracy"] = 92.0     # update
+for key, value in model_info.items():
+    print(key, value)</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-ds3')">Reveal Output</button>
+                <div id="out-ds3" class="output-box">Model-A<br>name Model-A<br>accuracy 92.0<br>tags ['nlp', 'v2']
+                </div>
+            </div>
+
+            <!-- Sets -->
+            <div id="ds-4" class="sub-pane">
+                <h2>4. Sets</h2>
+                <p>An unordered collection of unique elements, often used to eliminate duplicate values and perform
+                    mathematical set operations.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>tags_a = {"nlp", "v2", "prod"}
+tags_b = {"nlp", "vision"}
+print(tags_a & tags_b)   # intersection
+print(tags_a | tags_b)   # union</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-ds4')">Reveal Output</button>
+                <div id="out-ds4" class="output-box">{'nlp'}<br>{'nlp', 'v2', 'prod', 'vision'}</div>
+            </div>
+        </div>
+
+
+        <!-- 1C. Functions & Modules -->
+        <div id="functions" class="section-pane">
+            <h1>Functions & Modules</h1>
+            <p>Packaging code into reusable blocks and importing external libraries.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('func-1', this)">1. Functions</button>
+                <button class="sub-pill" onclick="openSub('func-2', this)">2. Modules & Packages</button>
+                <button class="sub-pill" onclick="openSub('func-3', this)">3. Lambda Functions</button>
+            </div>
+
+            <!-- Functions -->
+            <div id="func-1" class="sub-pane active">
+                <h2>1. Functions</h2>
+                <p>Define logic once, use it anywhere. Functions keep code DRY (Don't Repeat Yourself).</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>def calculate_accuracy(correct, total):
+    if total == 0:
+        return 0.0
+    return (correct / total) * 100
+
+print(f"Accuracy: {calculate_accuracy(85, 100)}%")</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-func1')">Reveal Output</button>
+                <div id="out-func1" class="output-box">Accuracy: 85.0%</div>
+            </div>
+
+            <!-- Modules -->
+            <div id="func-2" class="sub-pane">
+                <h2>2. Modules & Packages</h2>
+                <p>Python's superpower is its ecosystem. Use <code>import</code> to bring in external code.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import math
+import random
+
+print(f"Pi: {math.pi}")
+print(f"Random value: {random.uniform(-1, 1)}")</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-func2')">Reveal Output</button>
+                <div id="out-func2" class="output-box">Pi: 3.141592653589793<br>Random value: 0.4218... (varies between
+                    -1 and 1)</div>
+
+                <h3 style="margin-top: 1.5rem;">Top 10 Essential Packages for AI & Dev</h3>
+                <ul>
+                    <li><span class="inline-code">requests</span> — Making HTTP calls to external APIs.</li>
+                    <li><span class="inline-code">python-dotenv</span> — Securely loading API keys and secrets.</li>
+                    <li><span class="inline-code">openai</span> / <span class="inline-code">anthropic</span> — Official
+                        SDKs for integrating LLMs.</li>
+                    <li><span class="inline-code">pandas</span> — Reading and manipulating large datasets (CSV/Excel).
+                    </li>
+                    <li><span class="inline-code">numpy</span> — Extremely fast mathematical operations.</li>
+                    <li><span class="inline-code">pydantic</span> — Enforcing data types (crucial for structured AI
+                        outputs).</li>
+                    <li><span class="inline-code">fastapi</span> — Building high-performance web APIs quickly.</li>
+                    <li><span class="inline-code">beautifulsoup4</span> — Web scraping and extracting text for AI
+                        context.</li>
+                    <li><span class="inline-code">pytest</span> — Testing your code to ensure it doesn't break.</li>
+                    <li><span class="inline-code">matplotlib</span> — Visualizing data with charts and graphs.</li>
+                </ul>
+            </div>
+
+            <!-- Lambda Functions -->
+            <div id="func-3" class="sub-pane">
+                <h2>3. Lambda Functions</h2>
+
+                <p>Throwaway, unnamed functions. Often used with <span class="inline-code">sort()</span>.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>models = [{"name": "A", "accuracy": 91.4}, {"name": "B", "accuracy": 85.2}]
+models.sort(key=lambda m: m["accuracy"], reverse=True)
+for m in models: print(f"{m['name']}: {m['accuracy']}")</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-func3-3')">Reveal Output</button>
+                <div id="out-func3-3" class="output-box">A: 91.4<br>B: 85.2</div>
+            </div>
+        </div>
+
+        <!-- 3. OOP Concepts -->
+        <div id="oop" class="section-pane">
+
+            <h1>Object-Oriented Programming (OOP)</h1>
+            <p>Let's look at generic, framework-relevant examples. These patterns are everywhere in AI SDKs.</p>
+
+            <!-- Sub Navigation -->
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('oop-1', this)">1. Classes & Objects</button>
+                <button class="sub-pill" onclick="openSub('oop-2', this)">2. Abstraction</button>
+                <button class="sub-pill" onclick="openSub('oop-3', this)">3. Inheritance & Polymorphism</button>
+                <button class="sub-pill" onclick="openSub('oop-4', this)">4. Encapsulation</button>
+            </div>
+
+            <!-- Sub Pane 1 -->
+            <div id="oop-1" class="sub-pane active">
+                <h2>1. Classes & Objects</h2>
+                <p>A class is a blueprint; an object is an instance holding its own state.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>class AIModel:
+    def __init__(self, name, accuracy):
+        self.name = name
+        self.accuracy = accuracy
+
+    def summary(self):
+        return f"{self.name}: {self.accuracy}% accuracy"
+
+model = AIModel("Model-A", 91.4)
+print(model.summary())</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out1')">Reveal Output</button>
+                <div id="out1" class="output-box">Model-A: 91.4% accuracy</div>
+            </div>
+
+            <!-- Sub Pane 2 -->
+            <div id="oop-2" class="sub-pane">
+                <h2>2. Abstraction</h2>
+                <p>Expose <em>what</em> something does, hide <em>how</em>. An Abstract Base Class (ABC) defines a
+                    contract.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>from abc import ABC, abstractmethod
+
+class BaseModel(ABC):
+    @abstractmethod
+    def predict(self, data):
+        pass
+
+class TextModel(BaseModel):
+    def predict(self, data):
+        return "positive" if "good" in data.lower() else "negative"
+
+model = TextModel()
+print(model.predict("This is a good day!"))
+# model = BaseModel() # TypeError: Can't instantiate abstract class BaseModel</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-oop2')">Reveal Output</button>
+                <div id="out-oop2" class="output-box">positive<br><span style="color: #94a3b8;"># Direct instantiation:
+                        BaseModel() raises TypeError: Can't instantiate abstract class BaseModel</span></div>
+            </div>
+
+            <!-- Sub Pane 3 -->
+            <div id="oop-3" class="sub-pane">
+                <h2>3. Inheritance & Polymorphism</h2>
+                <p><strong>Inheritance:</strong> A subclass reuses and extends a parent's behavior.</p>
+                <p><strong>Polymorphism:</strong> Different classes respond to the same method call in their own way.
+                </p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>class AdvancedModel(AIModel):
+    def __init__(self, name, accuracy, version):
+        super().__init__(name, accuracy)
+        self.version = version
+
+    def summary(self):
+        base = super().summary()
+        return f"{base} | version: {self.version}"
+
+# Polymorphism in action
+models = [AIModel("Baseline", 70.0), AdvancedModel("Advanced", 91.4, "v2")]
+for m in models:
+    print(m.summary())</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out2')">Reveal Output</button>
+                <div id="out2" class="output-box">Baseline: 70.0% accuracy<br>Advanced: 91.4% accuracy | version: v2
+                </div>
+            </div>
+
+            <!-- Sub Pane 4 -->
+            <div id="oop-4" class="sub-pane">
+                <h2>4. Encapsulation</h2>
+                <p>Hide internal state and require all interactions to be performed through an object's methods.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>class APIClient:
+    def __init__(self, api_key):
+        self.__api_key = api_key  # private attribute
+
+    def fetch_data(self):
+        # Uses the hidden key internally
+        return f"Fetching data using hidden key: {self.__api_key[:4]}..."
+
+client = APIClient("sk-12345XYZ")
+print(client.fetch_data())
+# print(client.__api_key) # AttributeError: 'APIClient' object has no attribute '__api_key'</code></pre>
+                </div>
+                <button class="btn-reveal" onclick="toggleOutput('out-oop4')">Reveal Output</button>
+                <div id="out-oop4" class="output-box">Fetching data using hidden key: sk-1...<br><span
+                        style="color: #94a3b8;"># Direct access attempt: print(client.__api_key)</span><br><span
+                        style="color: #ef4444;">AttributeError: 'APIClient' object has no attribute '__api_key'</span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- 4. Exceptions -->
+        <div id="exceptions" class="section-pane">
+
+            <h1>Exception Handling</h1>
+            <p>In AI applications, APIs fail frequently. Defensive programming via exception handling is your safety
+                net.</p>
+
+            <h2>1. try/except Basics</h2>
+            <div class="code-container">
+                <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                <pre><code>try:
+    result = 10 / 0
+except ZeroDivisionError as e:
+    print(f"Something went wrong: {e}")
+finally:
+    print("This always runs — cleanup goes here.")</code></pre>
+            </div>
+
+            <h2>2. Custom Exceptions</h2>
+            <div class="code-container">
+                <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                <pre><code>class ModelNotTrainedError(Exception):
+    """Raised when prediction is attempted before training."""
+    pass
+
+class SimpleModel:
+    def __init__(self):
+        self.trained = False
+
+    def predict(self, x):
+        if not self.trained:
+            raise ModelNotTrainedError("Call .train() before .predict()")
+        return x * 2
+
+m = SimpleModel()
+try:
+    m.predict(5)
+except ModelNotTrainedError as e:
+    print(f"Custom error caught: {e}")</code></pre>
+            </div>
+
+            <button class="btn-reveal" onclick="toggleOutput('out-exc')">Reveal Output</button>
+            <div id="out-exc" class="output-box">Custom error caught: Call .train() before .predict()</div>
+        </div>
+
+
+        <!-- 6. File Handling -->
+        <div id="filehandling" class="section-pane">
+            <h1>File Handling</h1>
+            <p>Reading from and writing to the local filesystem using Context Managers.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('file-1', this)">1. Text Files</button>
+                <button class="sub-pill" onclick="openSub('file-2', this)">2. JSON Files</button>
+            </div>
+
+            <div id="file-1" class="sub-pane active">
+                <h2>1. Reading & Writing Safely</h2>
+                <p>The <code>with</code> statement ensures the file is automatically closed, even if errors occur.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Writing
+with open("data.txt", "w") as file:
+    file.write("User: Hello\n")
+
+# Reading
+try:
+    with open("data.txt", "r") as file:
+        print(file.read())
+except FileNotFoundError:
+    print("File not found.")</code></pre>
+                </div>
+            </div>
+
+            <div id="file-2" class="sub-pane">
+                <h2>2. JSON Files</h2>
+                <p>Working with structured JSON data using <span class="inline-code">json.dump</span> and <span
+                        class="inline-code">json.load</span>.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import json
+
+result = {"model": "gpt-4o-mini", "accuracy": 91.4, "tags": ["nlp", "v2"]}
+
+# Writing JSON
+with open("result.json", "w") as f:
+    json.dump(result, f, indent=2)
+
+# Reading JSON
+with open("result.json", "r") as f:
+    loaded = json.load(f)
+
+print(loaded["model"])</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Concurrency -->
+        <div id="concurrency" class="section-pane">
+            <h1>Multithreading vs Multiprocessing</h1>
+            <p>Doing multiple things at once to speed up execution.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('conc-1', this)">1. Multithreading</button>
+                <button class="sub-pill" onclick="openSub('conc-2', this)">2. Multiprocessing</button>
+            </div>
+
+            <div id="conc-1" class="sub-pane active">
+                <h2>1. Multithreading</h2>
+                <p>Best for <strong>I/O Bound</strong> tasks like network API calls, reading files, or downloading data.
+                    <strong>Threads</strong> are like multiple workers in the same kitchen—they share the exact same
+                    memory space (ingredients) and can easily pass data between each other, but they must coordinate to
+                    avoid stepping on each other's toes.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import threading
+import time
+
+def api_call():
+    time.sleep(1) # Simulating network wait
+
+threads = [threading.Thread(target=api_call) for _ in range(3)]
+for t in threads: t.start()
+for t in threads: t.join()</code></pre>
+                </div>
+            </div>
+
+            <div id="conc-2" class="sub-pane">
+                <h2>2. Multiprocessing</h2>
+                <p>Best for <strong>CPU Bound</strong> tasks like heavy math, data crunching, or model training. A
+                    <strong>Process</strong> is like spinning up an entirely separate kitchen with its own independent
+                    chef and ingredients. They don't share memory, allowing them to run truly in parallel across
+                    multiple CPU cores without conflicts.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import multiprocessing
+
+def heavy_math(num):
+    return sum(i*i for i in range(num))
+
+if __name__ == "__main__":
+    processes = [multiprocessing.Process(target=heavy_math, args=(1000000,)) for _ in range(2)]
+    for p in processes: p.start()
+    for p in processes: p.join()</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. API Demo -->
+        <div id="api" class="section-pane">
+
+            <h1>Calling API</h1>
+            <p>Loading the API key from a <span class="inline-code">.env</span> file & calling an LLM.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('api-1', this)">1. Basic Call</button>
+                <button class="sub-pill" onclick="openSub('api-2', this)">2. File-based Refactor</button>
+            </div>
+
+            <div id="api-1" class="sub-pane active">
+                <h2>1. Basic API Call</h2>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>from dotenv import load_dotenv
+import os
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+try:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": "What are the top 3 new developments in AI this month?"}]
+    )
+    print(response.choices[0].message.content)
+except Exception as e:
+    print(f"API call failed: {e}")</code></pre>
+                </div>
+            </div>
+
+            <div id="api-2" class="sub-pane">
+                <h2>2. File-based Refactor</h2>
+                <p>Read the prompt from <span class="inline-code">prompt.txt</span> and write the LLM response to <span
+                        class="inline-code">response.txt</span>.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>from dotenv import load_dotenv
+import os
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+with open("prompt.txt", "r") as f:
+    prompt = f.read().strip()
+
+try:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    reply = response.choices[0].message.content
+
+    with open("response.txt", "w") as f:
+        f.write(reply)
+
+    print("Response saved to response.txt")
+except Exception as e:
+    print(f"API call failed: {e}")</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Summary -->
+        <div id="summary" class="section-pane">
+            <h1>So far we learnt</h1>
+
+            <ul>
+                <li><strong>Core Basics & Control Structures:</strong> Variables, types, operators, and loops to control
+                    application flow.</li>
+                <li><strong>Data Structures:</strong> Lists, Tuples, Dictionaries, and Sets — the building blocks that
+                    hold your data.</li>
+                <li><strong>Functions & Modules:</strong> Writing reusable logic and leveraging Python's library
+                    ecosystem (including comprehensions and lambdas).</li>
+                <li><strong>OOP Concepts:</strong> How frameworks are fundamentally structured and built.</li>
+                <li><strong>Exceptions:</strong> How you survive unreliable and rate-limited API calls.</li>
+                <li><strong>File Handling:</strong> How to read from and write to the local filesystem (Text and JSON).
+                </li>
+                <li><strong>Concurrency:</strong> Doing multiple things at once to speed up execution via Multithreading
+                    and Multiprocessing.</li>
+                <li><strong>Calling API:</strong> The shape of every GenAI application (Input → Model call → Parsed
+                    response) along with file-based refactoring.</li>
+            </ul>
+
+            <h2>📝 Practice Activity — "Personal Task Prioritizer"</h2>
+            <p>Solidify everything you've learned into a single, cohesive build.</p>
+
+            <h3>Core Steps</h3>
+            <ol>
+                <li>Create a class <span class="inline-code">Task</span> with attributes <span
+                        class="inline-code">name</span>, <span class="inline-code">priority</span> (1–5), and <span
+                        class="inline-code">deadline_days</span>.</li>
+                <li>Add a custom exception <span class="inline-code">InvalidPriorityError</span>, raised inside <span
+                        class="inline-code">__init__</span> if priority isn't between 1 and 5. Create 5–6 tasks
+                    including at least one invalid one, and handle the error with <span
+                        class="inline-code">try/except</span> when creating them.</li>
+                <li>Store the valid tasks in a list. Loop through and print each one in a readable line, e.g. "Finish
+                    report — priority 4, due in 2 days".</li>
+                <li>Save that list (converted to dicts) to a JSON file, <span class="inline-code">tasks.json</span>.
+                </li>
+                <li>Read <span class="inline-code">tasks.json</span> back and print all the tasks from the loaded data,
+                    to confirm the save/load worked.</li>
+            </ol>
+
+            <h3>Optional Advanced Part</h3>
+            <p>Pick either or both:</p>
+            <ul>
+                <li>Use a list comprehension to pull out "urgent" tasks (<span class="inline-code">deadline_days <=
+                            3</span>), and <span class="inline-code">sorted()</span> with a <span
+                                class="inline-code">lambda</span> key to rank all tasks by priority.</li>
+                <li>Using the file-based API demo pattern: build a prompt from the task list (e.g. "Given these tasks,
+                    suggest what to tackle first and why"), send it via the API call, and append the AI's response to
+                    <span class="inline-code">tasks.json</span> instead of overwriting the file.</li>
+            </ul>
+
+            <h2>Preview: Next Session</h2>
+            <p>For our next session, we'll shift from writing standalone scripts to properly working with APIs in Python
+                — covering the basics of how HTTP requests actually work (GET vs POST, headers, status codes), using the
+                <span class="inline-code">requests</span> library to make real calls, parsing nested JSON responses, and
+                handling errors, retries, and rate limits so your API calls don't just break silently. We'll close with
+                a hands-on exercise calling a free public API and printing structured output from it — building directly
+                on the file handling and API-calling foundations from today.</p>
+        </div>
+
+    </div>
+
+    <script>
+        function openSection(id, btn) {
+            document.querySelectorAll('.section-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.navbar .pill-btn').forEach(el => el.classList.remove('active'));
+
+            const pane = document.getElementById(id);
+            pane.classList.add('active');
+            btn.classList.add('active');
+
+            let activeSub = pane.querySelector('.sub-pane.active');
+            let subId = activeSub ? activeSub.id : null;
+            if (typeof updateSidePanels === 'function') {
+                updateSidePanels(id, subId);
+            }
+        }
+
+        function openSub(id, btn) {
+            const pane = btn.closest('.section-pane');
+            const sectionId = pane ? pane.id : null;
+
+            // Only remove active class from sub-panes and pills within THIS section
+            if (pane) {
+                pane.querySelectorAll('.sub-pane').forEach(el => el.classList.remove('active'));
+                pane.querySelectorAll('.sub-pill').forEach(el => el.classList.remove('active'));
+            }
+
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+
+            if (typeof updateSidePanels === 'function') {
+                updateSidePanels(sectionId, id);
+            }
+        }
+
+        function toggleOutput(id) {
+            const out = document.getElementById(id);
+            if (out.classList.contains('show')) {
+                out.classList.remove('show');
+            } else {
+                out.classList.add('show');
+            }
+        }
+
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                }, 2000);
+            });
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                btn.innerHTML = '☀️';
+            } else {
+                btn.innerHTML = '🌙';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof updateSidePanels === 'function') {
+                updateSidePanels('intro', null);
+            }
+        });
+    </script>
+    <script src="graphics.js"></script>
+    <button id="bulb-btn" onclick="toggleAnalogy()" title="Toggle Real-World Metaphor">💡 <span class="bulb-text">Real
+            world example</span></button>
+</body>
+
+</html>

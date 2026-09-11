@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Python Phase 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           LIGHT MODE — warm cream, teal & coral
+           ═══════════════════════════════════════════ */
+        :root {
+            --bg-main: #fdfbf7;
+            --bg-alt: #f3f0e8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #0d9488;
+            --accent-hover: #0f766e;
+            --accent-glow: rgba(13, 148, 136, 0.15);
+            --border: #e2e0d8;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --code-border: #334155;
+            --pill-active-bg: linear-gradient(135deg, #0d9488, #06b6d4);
+            --pill-active-text: #ffffff;
+            --btn-gradient: linear-gradient(135deg, #0d9488, #06b6d4);
+            --output-accent: #f97316;
+            --heading-gradient: linear-gradient(135deg, #0d9488, #0284c7);
+            --navbar-bg: rgba(253, 251, 247, 0.85);
+        }
+
+        /* ═══════════════════════════════════════════
+           DARK MODE — deep navy, violet & electric cyan
+           ═══════════════════════════════════════════ */
+        body.dark-mode {
+            --bg-main: #0b0e17;
+            --bg-alt: #141825;
+            --text-main: #e8ecf4;
+            --text-muted: #8b95b0;
+            --accent: #a78bfa;
+            --accent-hover: #8b5cf6;
+            --accent-glow: rgba(167, 139, 250, 0.12);
+            --border: #252b3b;
+            --code-bg: #0d1117;
+            --code-text: #c9d1d9;
+            --code-border: #2d3548;
+            --pill-active-bg: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            --pill-active-text: #ffffff;
+            --btn-gradient: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            --output-accent: #f59e0b;
+            --heading-gradient: linear-gradient(135deg, #a78bfa, #22d3ee);
+            --navbar-bg: rgba(11, 14, 23, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* ─── Collapsible Top Navbar ─── */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 1.5rem;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            height: 8px;
+            overflow: hidden;
+            transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.35s ease;
+        }
+
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 3px;
+            border-radius: 3px;
+            background: var(--accent);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar:hover,
+        .navbar.expanded {
+            height: 68px;
+            padding: 0 1.5rem;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .navbar:hover::after,
+        .navbar.expanded::after {
+            opacity: 0;
+        }
+
+        .navbar>* {
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: opacity 0.25s ease 0.05s, transform 0.25s ease 0.05s;
+        }
+
+        .navbar:hover>*,
+        .navbar.expanded>* {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .pill-btn {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem 1.1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .pill-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .pill-btn.active {
+            background: var(--pill-active-bg);
+            color: var(--pill-active-text);
+            border-color: transparent;
+            box-shadow: 0 2px 12px var(--accent-glow);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem 0.9rem;
+            font-size: 1rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        /* ─── Main Content ─── */
+        .content-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2rem 3rem 2rem;
+            margin-top: 8px;
+            transition: margin-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Shift content view smoothly below navbar on hover */
+        .navbar:hover~.content-container,
+        .navbar.expanded~.content-container,
+        body:has(.navbar:hover) .content-container,
+        body:has(.navbar.expanded) .content-container {
+            margin-top: 68px;
+        }
+
+        .section-pane {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            /* Added for absolute positioning of child side-graphics */
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        .side-graphic {
+            position: absolute;
+            top: 2rem;
+            width: 280px;
+            display: none;
+            /* Hidden by default on smaller screens */
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-graphic:hover {
+            opacity: 1;
+        }
+
+        @media (min-width: 1420px) {
+            .side-graphic {
+                display: block;
+                animation: fadeSlideIn 0.6s ease;
+            }
+
+            .side-graphic.left {
+                right: 104%;
+            }
+
+            .side-graphic.right {
+                left: 104%;
+            }
+        }
+
+        /* SVG Styling */
+        .side-graphic svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+        }
+
+
+
+        /* ─── Floating Bulb Button ─── */
+        #bulb-btn {
+            position: fixed;
+            left: 20px;
+            top: 60px;
+            background: var(--bg-alt);
+            border: 2px solid var(--accent);
+            color: var(--text-main);
+            border-radius: 25px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--accent-glow);
+            z-index: 100;
+            transition: all 0.3s ease;
+            gap: 8px;
+        }
+
+        #bulb-btn:hover {
+            transform: scale(1.05);
+            background: var(--accent-glow);
+        }
+
+        .bulb-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        #bulb-btn:hover .bulb-text,
+        #bulb-btn.expanded .bulb-text {
+            display: inline-block;
+        }
+
+        @media (min-width: 1440px) {
+            #bulb-btn {
+                left: calc(50% - 720px);
+                top: calc(50% - 210px);
+                /* Just above the image area */
+            }
+        }
+
+        /* ─── Dynamic Side Panels ─── */
+        .side-panel {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
+            z-index: 50;
+        }
+
+        .side-panel.show {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+            z-index: 200;
+        }
+
+        @media (min-width: 1440px) {
+            .side-panel {
+                display: block;
+                transform: translateY(-50%) scale(0.95);
+            }
+
+            #left-panel {
+                left: calc(50% - 720px);
+            }
+
+            #right-panel {
+                right: calc(50% - 720px);
+            }
+        }
+
+        .side-panel svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+        }
+
+        .section-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── Typography ─── */
+        h1 {
+            font-size: 2.6rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: var(--heading-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 500;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        p,
+        li {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        li strong {
+            color: var(--text-main);
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ─── Hero Section ─── */
+        .hero-section {
+            text-align: center;
+            padding-top: 4rem;
+        }
+
+        .hero-section img {
+            width: 150px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+        }
+
+        /* ─── OOP Sub-navigation ─── */
+        .sub-nav {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .sub-pill {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.45rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+        }
+
+        .sub-pill:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+        }
+
+        .sub-pill.active {
+            background: var(--pill-active-bg);
+            color: var(--pill-active-text);
+            border-color: transparent;
+        }
+
+        .sub-pane {
+            display: none;
+        }
+
+        .sub-pane.active {
+            display: block;
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        /* ─── Code Blocks ─── */
+        .code-container {
+            position: relative;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--code-border);
+            background: var(--code-bg);
+            overflow: hidden;
+        }
+
+        pre {
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--code-text);
+            line-height: 1.6;
+        }
+
+        .inline-code {
+            background-color: var(--bg-alt);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            border: 1px solid var(--border);
+            color: var(--accent);
+        }
+
+        /* ─── Copy Button ─── */
+        .btn-copy {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        /* ─── Reveal Output Button ─── */
+        .btn-reveal {
+            background: var(--btn-gradient);
+            border: none;
+            color: #fff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 1rem;
+            box-shadow: 0 2px 10px var(--accent-glow);
+        }
+
+        .btn-reveal:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        /* ─── Output Box ─── */
+        .output-box {
+            display: none;
+            background-color: var(--bg-alt);
+            border-left: 3px solid var(--output-accent);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .output-box.show {
+            display: block;
+            animation: fadeSlideIn 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <button class="pill-btn active" onclick="openSection('intro', this)">Phase 2 Intro</button>
+        <button class="pill-btn" onclick="openSection('concurrency', this)">Concurrency</button>
+        <button class="pill-btn" onclick="openSection('http_funds', this)">HTTP Fundamentals</button>
+        <button class="pill-btn" onclick="openSection('robust_api', this)">Robust APIs</button>
+        <button class="pill-btn" onclick="openSection('calling_api', this)">Calling APIs</button>
+        <button class="pill-btn" onclick="openSection('summary', this)">Summary</button>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">☀️</button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <!-- Fixed Side Panels -->
+    <div id="left-panel" class="side-panel"></div>
+    <div id="right-panel" class="side-panel"></div>
+
+    <div class="content-container">
+
+        <!-- 1. Intro -->
+        <div id="intro" class="section-pane active">
+            <div class="hero-section">
+                <img src="python-logo.svg" alt="Python Logo">
+                <h1>Python Chapter 2</h1>
+            </div>
+            <p>Welcome to Python for AI session. We're shifting from basic software engineering habits to advanced
+                architectural patterns and real-world network communication.</p>
+
+            <h2>What We'll Cover</h2>
+            <ul>
+                <li><strong>Concurrency</strong> &rarr; Speeding up execution via Multithreading (I/O) and
+                    Multiprocessing (CPU).</li>
+                <li><strong>HTTP Fundamentals</strong> &rarr; GET vs POST, Headers, Status Codes, and the <span
+                        class="inline-code">requests</span> library.</li>
+                <li><strong>Robust APIs</strong> &rarr; Handling timeouts, Retries, Exceptions, and Rate Limits.</li>
+                <li><strong>Calling APIs (Hands-On)</strong> &rarr; Fetching weather data via Open-Meteo & making
+                    file-prompt LLM calls via OpenAI SDK.</li>
+            </ul>
+        </div>
+
+        <!-- 2. Concurrency -->
+        <div id="concurrency" class="section-pane">
+            <h1>Multithreading vs Multiprocessing</h1>
+            <p>Doing multiple things at once to speed up execution.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('conc-1', this)">1. Multithreading</button>
+                <button class="sub-pill" onclick="openSub('conc-2', this)">2. Multiprocessing</button>
+            </div>
+
+            <div id="conc-1" class="sub-pane active">
+                <h2>1. Multithreading</h2>
+                <p>Best for <strong>I/O Bound</strong> tasks like network API requests or database lookups.
+                    In a Web Server, when <strong>Thread 1</strong> is waiting for a slow database response (I/O wait), Python releases the GIL so <strong>Thread 2</strong> can immediately serve the next incoming client without being blocked!
+                </p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import threading, time
+
+def handle_client(name, wait_time):
+    print(f"Serving {name} (waiting {wait_time}s)...")
+    time.sleep(wait_time) # Simulating I/O
+    print(f"Finished {name}!")
+
+requests = [("Client 1", 3), ("Client 2", 1), ("Client 3", 1)]
+threads = []
+
+for name, wait in requests:
+    t = threading.Thread(target=handle_client, args=(name, wait))
+    threads.append(t)
+    t.start()
+
+for t in threads: t.join()</code></pre>
+                </div>
+            </div>
+
+            <div id="conc-2" class="sub-pane">
+                <h2>2. Multiprocessing</h2>
+                <p>Best for <strong>CPU Bound</strong> tasks like heavy math, data crunching, or model training. A
+                    <strong>Process</strong> runs in its own memory space, bypassing the Global Interpreter Lock (GIL) to execute truly in parallel across multiple CPU cores.
+                </p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import multiprocessing
+
+def heavy_math(num):
+    return sum(i*i for i in range(num))
+
+if __name__ == "__main__":
+    processes = [multiprocessing.Process(target=heavy_math, args=(1000000,)) for _ in range(2)]
+    for p in processes: p.start()
+    for p in processes: p.join()</code></pre>
+                </div>
+                <div class="summary-box" style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-alt); border-left: 4px solid var(--accent); border-radius: 4px; line-height: 1.6;">
+                    <strong>The Golden Rule:</strong> Use <em>Multithreading</em> when your program spends a lot of time waiting (e.g., downloading data from APIs, waiting for disk reads). Use <em>Multiprocessing</em> when your program needs raw computational power (e.g., crunching huge data arrays, machine learning) so it can leverage every core on your CPU.
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. HTTP Fundamentals -->
+        <div id="http_funds" class="section-pane">
+            <h1>HTTP Fundamentals</h1>
+            <p>Under the hood of the internet and making requests via the <span class="inline-code">requests</span>
+                library.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('http-1', this)">1. HTTP Methods (CRUD)</button>
+                <button class="sub-pill" onclick="openSub('http-2', this)">2. The requests Library</button>
+            </div>
+
+            <!-- Sub Pane 1 -->
+            <div id="http-1" class="sub-pane active">
+                <h2>1. HTTP Methods (CRUD) & Status Codes</h2>
+                <p>The internet relies on standard methods to interact with data (Create, Read, Update, Delete).</p>
+                <ul>
+                    <li><strong>POST (Create):</strong> Sending new data (e.g., submitting a form, sending an LLM prompt).</li>
+                    <li><strong>GET (Read):</strong> Fetching existing data (e.g., loading a webpage, searching).</li>
+                    <li><strong>PATCH/PUT (Update):</strong> Modifying existing data.</li>
+                    <li><strong>DELETE (Delete):</strong> Removing data.</li>
+                </ul>
+                <h3 style="margin-top: 1rem; font-size: 1rem;">Common Status Codes:</h3>
+                <ul style="margin-top: 0.5rem;">
+                    <li><span class="inline-code">200 OK / 201 Created</span> - Success!</li>
+                    <li><span class="inline-code">400 Bad Request</span> - Your data is malformed.</li>
+                    <li><span class="inline-code">401 Unauthorized</span> - Invalid API Key or login.</li>
+                    <li><span class="inline-code">404 Not Found</span> - The endpoint or resource doesn't exist.</li>
+                    <li><span class="inline-code">429 Too Many Requests</span> - Rate limit exceeded.</li>
+                    <li><span class="inline-code">500 Server Error</span> - The API provider's server crashed.</li>
+                </ul>
+            </div>
+
+            <!-- Sub Pane 2 -->
+            <div id="http-2" class="sub-pane">
+                <h2>2. The requests Library (GET & POST)</h2>
+                <p>Making a GET request to fetch data, and a POST request to send data.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import requests
+
+# 1. GET Request (Fetching Data)
+response = requests.get("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true")
+if response.status_code == 200:
+    temp = response.json()["current_weather"]["temperature"]
+    print(f"Berlin Temp: {temp}°C")
+
+# 2. POST Request (Sending Data)
+url = "https://jsonplaceholder.typicode.com/posts"
+data_to_send = {"title": "Hello", "body": "World", "userId": 1}
+post_response = requests.post(url, json=data_to_send)
+
+print(f"POST Status: {post_response.status_code}") # 201 Created
+print(f"Response: {post_response.json()}")</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Robust APIs -->
+        <div id="robust_api" class="section-pane">
+            <h1>Robust APIs</h1>
+            <p>API calls over the internet will fail. Defensive programming is required.</p>
+
+            <div class="code-container">
+                <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                <pre><code>import requests
+import time
+
+url = "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true"
+max_retries = 3
+
+for attempt in range(max_retries):
+    try:
+        # Add timeout to prevent hanging forever
+        response = requests.get(url, timeout=5)
+        response.raise_for_status() # Raises Exception if status != 200
+        
+        print("Success!", response.json()["current_weather"]["temperature"])
+        break # Exit loop on success
+        
+    except requests.exceptions.Timeout:
+        print(f"Attempt {attempt+1} timed out. Retrying...")
+        time.sleep(2)
+    except requests.exceptions.RequestException as e:
+        print(f"API Error: {e}")
+        break # Non-recoverable error</code></pre>
+            </div>
+        </div>
+
+        <!-- 5. Calling APIs -->
+        <div id="calling_api" class="section-pane">
+            <h1>Calling APIs (Advanced)</h1>
+            <p>Applying HTTP concepts via SDKs and Hands-On practice.</p>
+
+            <div class="sub-nav">
+                <button class="sub-pill active" onclick="openSub('api-1', this)">1. Calling LLM (File Prompt)</button>
+                <button class="sub-pill" onclick="openSub('api-2', this)">2. Open-Meteo Hands-On</button>
+            </div>
+
+            <!-- Sub Pane 1 -->
+            <div id="api-1" class="sub-pane active">
+                <h2>1. Calling LLM (File Prompt)</h2>
+                <p>Read the prompt from <span class="inline-code">prompt.txt</span> and write the LLM response to <span
+                        class="inline-code">response.txt</span>.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>from dotenv import load_dotenv
+import os
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+with open("prompt.txt", "r") as f:
+    prompt = f.read().strip()
+
+try:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    reply = response.choices[0].message.content
+
+    with open("response.txt", "w") as f:
+        f.write(reply)
+
+    print("Response saved to response.txt")
+except Exception as e:
+    print(f"API call failed: {e}")</code></pre>
+                </div>
+            </div>
+
+            <!-- Sub Pane 2 -->
+            <div id="api-2" class="sub-pane">
+                <h2>2. Open-Meteo Hands-On</h2>
+                <p>Your turn! Use the <span class="inline-code">requests</span> library to call the Open-Meteo API for
+                    your local city's coordinates and print out the current windspeed.</p>
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                    <pre><code>import requests
+
+# Goal: Fetch weather for your coordinates (e.g. NYC: 40.71, -74.00)
+# URL pattern: https://api.open-meteo.com/v1/forecast?latitude=XX.XX&longitude=XX.XX&current_weather=true
+
+# 1. Make the request using requests.get()
+# 2. Check status_code == 200
+# 3. Parse JSON
+# 4. Extract and print ["current_weather"]["windspeed"]
+</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Summary -->
+        <div id="summary" class="section-pane">
+            <h1>Summary</h1>
+
+            <ul>
+                <li><strong>Concurrency:</strong> Multithreading for I/O bound tasks (like APIs), Multiprocessing for
+                    CPU bound tasks.</li>
+                <li><strong>HTTP Fundamentals:</strong> GET fetches data, POST sends data. Status codes tell you what
+                    happened.</li>
+                <li><strong>Parsing JSON:</strong> Dictionary traversal is key to extracting data from API payloads.
+                </li>
+                <li><strong>Robustness:</strong> Using timeouts and try/except blocks to retry transient failures.</li>
+                <li><strong>File + SDK Integration:</strong> Combining file reading with SDK methods makes your AI
+                    agents flexible and data-driven.</li>
+            </ul>
+
+            <h2>📝 Practice Activity — "Resilient Weather Logger"</h2>
+            <p>Solidify everything you've learned into a single, cohesive build.</p>
+            <ol>
+                <li>Create a script that fetches the current weather from Open-Meteo.</li>
+                <li>Wrap the request in a `try/except` block with a timeout.</li>
+                <li>If the request succeeds, parse the JSON to get the temperature and write a new line to a
+                    `weather_log.txt` file (e.g., "Success: 24°C").</li>
+                <li>If it fails, catch the specific exception and write the error to the log file (e.g., "Error:
+                    Connection Timeout").</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <script>
+        function openSection(id, btn) {
+            document.querySelectorAll('.section-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.navbar .pill-btn').forEach(el => el.classList.remove('active'));
+
+            const pane = document.getElementById(id);
+            pane.classList.add('active');
+            btn.classList.add('active');
+
+            let activeSub = pane.querySelector('.sub-pane.active');
+            let subId = activeSub ? activeSub.id : null;
+            if (typeof updateSidePanels === 'function') {
+                updateSidePanels(id, subId);
+            }
+        }
+
+        function openSub(id, btn) {
+            const pane = btn.closest('.section-pane');
+            const sectionId = pane ? pane.id : null;
+
+            if (pane) {
+                pane.querySelectorAll('.sub-pane').forEach(el => el.classList.remove('active'));
+                pane.querySelectorAll('.sub-pill').forEach(el => el.classList.remove('active'));
+            }
+
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+
+            if (typeof updateSidePanels === 'function') {
+                updateSidePanels(sectionId, id);
+            }
+        }
+
+        function toggleOutput(id) {
+            const out = document.getElementById(id);
+            if (out.classList.contains('show')) {
+                out.classList.remove('show');
+            } else {
+                out.classList.add('show');
+            }
+        }
+
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                }, 2000);
+            });
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                btn.innerHTML = '☀️';
+            } else {
+                btn.innerHTML = '🌙';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof updateSidePanels === 'function') {
+                updateSidePanels('intro', null);
+            }
+        });
+    </script>
+    <script src="graphics.js"></script>
+    <button id="bulb-btn" onclick="toggleAnalogy()" title="Toggle Real-World Metaphor">💡 <span class="bulb-text">Real
+            world example</span></button>
+</body>
+
+</html>

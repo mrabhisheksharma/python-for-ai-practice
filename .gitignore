@@ -1,16 +1,4 @@
-# Environments
-.env
-venv/
-env/
-
-# Course Materials (kept locally)
-session_materials/
-downloads_organizer/
-
-# Byte-compiled / optimized / DLL files
+Python-01/
+Python-02/
 __pycache__/
-*.py[cod]
-*$py.class
-
-# Agents
-.agents/
+*.pyc

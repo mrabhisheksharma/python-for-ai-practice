@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Instructor Notes: Session 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            padding: 16px;
+            line-height: 1.7;
+            font-size: 17px;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #334155;
+        }
+
+        h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        em {
+            color: #94a3b8;
+        }
+
+        strong {
+            color: #f1f5f9;
+        }
+
+        code {
+            background: #1e293b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #a78bfa;
+            word-break: break-all;
+        }
+
+        /* Cards */
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+            border: 1px solid #334155;
+        }
+
+        /* Time badge */
+        .time {
+            display: inline-block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            background: rgba(56,189,248,0.12);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Prompt / callout boxes */
+        .prompt {
+            background-color: rgba(167,139,250,0.1);
+            padding: 14px;
+            border-left: 4px solid #a78bfa;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+            font-size: 1rem;
+            line-height: 1.7;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .prompt strong {
+            color: #c4b5fd;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #334155;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📋 Session 1: Instructor Guide</h1>
+
+    <!-- 1. Introduction -->
+    <div class="card">
+        <h2>1. Python Introduction</h2>
+        <span class="time">~3-5 min</span>
+        <p><strong>Definition:</strong> Python is the foundational engine of modern AI models, serving as both the language they were built with and the toolkit they use to interact with the world.</p>
+        <div class="prompt">
+            <strong>🗣️ Mention:</strong> "Python isn't just about 'how to code' — it's about building strong software engineering habits to automate tasks and build robust AI pipelines."<br><br>
+            <strong>🗣️ Mention:</strong> "When you see an AI writing and running Python code during a conversation, it is leveraging a capability called Code Execution."
+        </div>
+    </div>
+
+    <!-- 2. Core Basics -->
+    <div class="card">
+        <h2>2. Core Basics</h2>
+        <span class="time">~10 min</span>
+        <p><strong>Goal:</strong> Establish how Python stores and manipulates basic information.</p>
+        
+        <h3>Variables & Types</h3>
+        <p><strong>Definition:</strong> Variables are named references to data stored in memory. Python determines the type automatically at runtime.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Labeled Storage Boxes</strong><br>
+            Point to the image of the labeled boxes. Explain that when shifting a house, you put items in boxes labeled 'Books' or 'Clothes'. In Python, you just pack the data into a named box, and Python automatically knows if it's text (str), a number (int/float), or a boolean (True/False).
+        </div>
+
+        <h3>Operators</h3>
+        <p><strong>Definition:</strong> Symbols that perform mathematical, logical, and relational operations to evaluate state and compute results.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Scales of Justice & Math Machines</strong><br>
+            Point to the image of the scales. Operators are the machinery that weigh and compare data (e.g., checking if accuracy > 90) to decide what the program should do next.
+        </div>
+    </div>
+
+    <!-- 3. Control Structures -->
+    <div class="card">
+        <h2>3. Control Structures</h2>
+        <span class="time">~15 min</span>
+        <p><strong>Goal:</strong> Explain how programs make decisions and repeat actions.</p>
+
+        <h3>If / Elif / Else</h3>
+        <p><strong>Definition:</strong> Conditional branching that dictates which block of code runs based on a True/False evaluation.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Train Track Switch</strong><br>
+            Refer to the train track split image. The program is a train, and the <code>if</code> condition acts as the track switch — depending on the signal, the train diverts to route A (success) or route B (failure).
+        </div>
+
+        <h3>For Loops</h3>
+        <p><strong>Definition:</strong> Iterating over a collection of items sequentially, executing the same block of code for each item.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Factory Conveyor Belt</strong><br>
+            Show the assembly line image. The loop body is a robotic arm, and the data list is a conveyor belt. The arm performs the exact same operation on every single box that comes down the line.
+        </div>
+
+        <h3>While Loops</h3>
+        <p><strong>Definition:</strong> Repeating a block of code continuously as long as a specific condition remains true.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Running on a Treadmill</strong><br>
+            Refer to the treadmill image. You keep running (the loop keeps executing) UNTIL you hit a specific distance or get tired (the condition becomes False).
+        </div>
+    </div>
+
+    <!-- 4. Data Structures -->
+    <div class="card">
+        <h2>4. Data Structures</h2>
+        <span class="time">~15 min</span>
+        <p><strong>Goal:</strong> Explain how Python groups multiple pieces of data into single, manageable structures.</p>
+
+        <h3>Lists & Tuples</h3>
+        <p><strong>Definition:</strong> Ordered collections of items. Lists can be modified (mutable), while Tuples cannot be changed once created (immutable).</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Shopping Lists & Padlocks</strong><br>
+            A <strong>List</strong> is like a shopping list where you can cross things out and add new items. A <strong>Tuple</strong> is like GPS coordinates locked behind a padlock — it's fixed permanently.
+        </div>
+
+        <h3>Dictionaries</h3>
+        <p><strong>Definition:</strong> Collections of key-value pairs used for fast data lookup, directly mirroring JSON formats used in APIs.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Filing Cabinet / Phonebook</strong><br>
+            You don't read a phonebook start-to-finish; you jump straight to the person's name (the Key) to find their number (the Value). This is exactly how AI prompt messages are structured.
+        </div>
+
+        <h3>Sets</h3>
+        <p><strong>Definition:</strong> Unordered collections of unique elements, perfect for eliminating duplicates and finding commonalities.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): ID Badge Scanner</strong><br>
+            A Set is like a security bouncer. No matter how many times someone tries to enter, the scanner ensures each unique ID is only registered once.
+        </div>
+    </div>
+
+    <!-- 5. Functions & Modules -->
+    <div class="card">
+        <h2>5. Functions, Modules & Packages</h2>
+        <span class="time">~10 min</span>
+        <p><strong>Goal:</strong> Explain how to package code into reusable blocks and leverage external libraries.</p>
+        <p><strong>Definition:</strong> A Function is a block of reusable code. A Module/Package is a collection of functions written by others that you can import.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Recipe Box & Supermarket</strong><br>
+            <strong>Functions:</strong> A recipe box where you write down a cooking process once, and use it forever.<br>
+            <strong>Packages:</strong> Going to the supermarket. Why mill your own flour when you can just import someone else's perfectly baked bread (like importing OpenAI's library)?
+        </div>
+    </div>
+
+    <!-- 6. OOP -->
+    <div class="card">
+        <h2>6. OOP Concepts</h2>
+        <span class="time">~20 min</span>
+        <p><strong>Goal:</strong> Introduce Object-Oriented Programming as the fundamental architecture behind all GenAI frameworks (LangChain, LlamaIndex, etc).</p>
+
+        <h3>Classes & Objects</h3>
+        <p><strong>Definition:</strong> A Class is a template for creating objects. An Object is a specific instance containing state (data) and behavior (methods).</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Blueprints & Robots</strong><br>
+            The Class is the paper blueprint. The Object is the physical robot built from that blueprint.
+        </div>
+
+        <h3>Abstraction</h3>
+        <p><strong>Definition:</strong> Hiding complex implementation details and exposing only the necessary parts to the user.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Car Steering Wheel</strong><br>
+            You don't need to know how the fuel injection works to drive a car; you just turn the steering wheel. Abstraction provides the steering wheel.
+        </div>
+
+        <h3>Inheritance & Polymorphism</h3>
+        <p><strong>Definition:</strong> Subclasses inheriting traits from a parent class, but reacting differently to the same commands (Polymorphism).</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): The Animal Kingdom</strong><br>
+            A base "Animal" class has a "speak()" command. A Dog subclass barks, and a Cat subclass meows. Same command, different behavior.
+        </div>
+
+        <h3>Encapsulation</h3>
+        <p><strong>Definition:</strong> Restricting direct access to an object's internal data, forcing interaction through specific methods.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor: Safe with a Combination Lock</strong><br>
+            You can't just grab the money inside the safe; you have to interact with the lock (the method) using the right code to get access.
+        </div>
+    </div>
+
+    <!-- 7. Exceptions -->
+    <div class="card">
+        <h2>7. Exception Handling</h2>
+        <span class="time">~10 min</span>
+        <p><strong>Goal:</strong> Teach defensive programming to prevent applications from crashing.</p>
+        <p><strong>Definition:</strong> Mechanisms (like try/except blocks) that catch runtime errors and allow the program to recover gracefully instead of halting.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Safety Net / Circuit Breaker</strong><br>
+            Refer to the safety net image. When a tightrope walker falls (an API rate limit is hit), the safety net catches them so the show can go on.
+        </div>
+    </div>
+    
+    <!-- 8. File Handling -->
+    <div class="card">
+        <h2>8. File Handling</h2>
+        <span class="time">~10 min</span>
+        <p><strong>Goal:</strong> Explain how to persistently save and read data using the local filesystem and Context Managers.</p>
+        <p><strong>Definition:</strong> Opening text or JSON files using <code>with open()</code>, which ensures the file stream is safely closed when operations finish.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): A Library Archive</strong><br>
+            Context managers are like a strict librarian. You request a book, you read or write in it, and the librarian guarantees it goes safely back on the shelf (closed), even if a fire alarm goes off (an error occurs).
+        </div>
+    </div>
+
+    <!-- 9. Concurrency -->
+    <div class="card">
+        <h2>9. Concurrency (Multithreading & Multiprocessing)</h2>
+        <span class="time">~10 min</span>
+        <p><strong>Goal:</strong> Explain how to do multiple things at once to speed up slow operations.</p>
+        <p><strong>Definition:</strong> Multithreading uses shared memory to handle multiple I/O-bound tasks concurrently. Multiprocessing spins up separate CPU processes for heavy math tasks.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Kitchen Chefs</strong><br>
+            <strong>Multithreading:</strong> One chef juggling multiple pans. While one pot boils (waiting for an API response), they chop vegetables.<br>
+            <strong>Multiprocessing:</strong> Hiring three separate chefs to work at three separate stations to chop 1000 onions at the same time.
+        </div>
+    </div>
+
+    <!-- 10. Calling API -->
+    <div class="card">
+        <h2>10. Calling API</h2>
+        <span class="time">~10 min</span>
+        <p><strong>Goal:</strong> Demonstrate the core loop of every GenAI application: gathering input, making the API call, and parsing the response.</p>
+        <p><strong>Definition:</strong> Loading hidden credentials securely from a <code>.env</code> file, then utilizing an SDK (like OpenAI's) to communicate with a remote server over the internet.</p>
+        <div class="prompt">
+            <strong>🎨 Visual Metaphor (Image Reference): Restaurant Order Waiter</strong><br>
+            You (the client) give your prompt to the Waiter (the API request). The Waiter takes it to the Kitchen (the LLM server), waits for the food to be prepared, and brings the parsed response back to your table.
+        </div>
+        <div class="prompt" style="background-color: rgba(56,189,248,0.1); border-left: 4px solid #38bdf8;">
+            <strong>Context Setting for Next Session:</strong><br>
+            Say a one-line note at the end of this section like: <em>"Next session, we'll go under the hood — this same idea, but with raw HTTP requests to any API, not just via a ready-made SDK."</em>
+        </div>
+    </div>
+
+    <!-- 11. Summary -->
+    <div class="card">
+        <h2>11. Summary & Practice Activity</h2>
+        <span class="time">~5 min</span>
+        <p><strong>Goal:</strong> Recap everything and introduce the capstone practice activity.</p>
+        <div class="prompt">
+            <strong>📝 Homework to assign: "Personal Task Prioritizer"</strong><br>
+            Have students build a single cohesive script that utilizes everything they learned:<br>
+            - Create a <code>Task</code> class with priority and deadlines.<br>
+            - Raise a custom <code>InvalidPriorityError</code> for bad data.<br>
+            - Save all tasks to a <code>tasks.json</code> file using File Handling.<br>
+            - Optionally use lambdas to sort urgent tasks, or integrate the API demo to ask the LLM what to tackle first!
+        </div>
+        <p>Preview next session: <strong>Advanced Python & APIs</strong> (HTTP requests, parsing nested JSON, rate limit handling, and API integration).</p>
+    </div>
+
+</body>
+</html>
